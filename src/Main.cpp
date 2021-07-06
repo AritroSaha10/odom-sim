@@ -13,6 +13,7 @@
 #include <odom.h>
 #include <chrono>
 #include <thread>
+#include <cstdio>
 #include "tracking.h"
 #include "macros.h"
 #include "autonomous.h"
@@ -206,7 +207,7 @@ int main()
 	backgroundShader.use();
 	backgroundShader.setInt("text", 1);
 	unsigned int backgroundTexture;
-	loadTexture(backgroundTexture, "textures/VexField2.png");
+	loadTexture(backgroundTexture, "textures/VEX_TippingPoint.png");
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, backgroundTexture);
 

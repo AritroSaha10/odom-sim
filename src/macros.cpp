@@ -2,6 +2,7 @@
 #include "control.h"
 #include <chrono>
 #include <thread>
+#include <cstdio>
 
 const int initialShotDelay = 400;    // ms
 const int subsequentShotDelay = 400; // ms
