@@ -1,0 +1,37 @@
+[
+{
+  "directory": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/build",
+  "command": "E:/Stuff_For_New_SSD/msys64/mingw64/bin/g++.exe  @CMakeFiles/OdomSim.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles/OdomSim.dir/src/Main.cpp.obj -c E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/Main.cpp",
+  "file": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/Main.cpp"
+},
+{
+  "directory": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/build",
+  "command": "E:/Stuff_For_New_SSD/msys64/mingw64/bin/g++.exe  @CMakeFiles/OdomSim.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles/OdomSim.dir/src/autonomous.cpp.obj -c E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/autonomous.cpp",
+  "file": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/autonomous.cpp"
+},
+{
+  "directory": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/build",
+  "command": "E:/Stuff_For_New_SSD/msys64/mingw64/bin/g++.exe  @CMakeFiles/OdomSim.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles/OdomSim.dir/src/control.cpp.obj -c E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/control.cpp",
+  "file": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/control.cpp"
+},
+{
+  "directory": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/build",
+  "command": "E:/Stuff_For_New_SSD/msys64/mingw64/bin/g++.exe  @CMakeFiles/OdomSim.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles/OdomSim.dir/src/drive.cpp.obj -c E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/drive.cpp",
+  "file": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/drive.cpp"
+},
+{
+  "directory": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/build",
+  "command": "E:/Stuff_For_New_SSD/msys64/mingw64/bin/x86_64-w64-mingw32-gcc.exe  @CMakeFiles/OdomSim.dir/includes_C.rsp -g -o CMakeFiles/OdomSim.dir/src/glad.c.obj -c E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/glad.c",
+  "file": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/glad.c"
+},
+{
+  "directory": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/build",
+  "command": "E:/Stuff_For_New_SSD/msys64/mingw64/bin/g++.exe  @CMakeFiles/OdomSim.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles/OdomSim.dir/src/macros.cpp.obj -c E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/macros.cpp",
+  "file": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/macros.cpp"
+},
+{
+  "directory": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/build",
+  "command": "E:/Stuff_For_New_SSD/msys64/mingw64/bin/g++.exe  @CMakeFiles/OdomSim.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles/OdomSim.dir/src/tracking.cpp.obj -c E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/tracking.cpp",
+  "file": "E:/AritroStuff/Programming/CodingProjs/VEX/forked-odom-sim/odom-sim/src/tracking.cpp"
+}
+]
