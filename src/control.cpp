@@ -181,6 +181,22 @@ void strafeToPoint(Vector2 target) {
 }
 */
 
+
+double rotateAngle180(double angle) {
+  double newAngle = radToDeg(angle) - 360.0 * std::floor((radToDeg(angle) + 180.0) * (1.0 / 360.0));
+  // if(newAngle == -180_deg) newAngle = 180_deg;
+  return degToRad(newAngle);
+}
+
+double rotateAngle90(double angle) {
+  angle = rotateAngle180(angle);
+  if (abs(angle) > 90) {
+    angle += 90;
+    angle = rotateAngle180(angle);
+  }
+  return angle;
+}
+
 void moveToPoint(Vector2 target) {
 	double time = glfwGetTime();
 	PIDController distanceController(0, driveConstants, DISTANCE_TOLERANCE, DISTANCE_INTEGRAL_TOLERANCE);
@@ -212,7 +228,7 @@ void moveToPoint(Vector2 target) {
 		}
 
 		// rotate angle to be +- 90
-    	// angleErr = rotateAngle90(angleErr);
+    	angleErr = rotateAngle90(angleErr);
 
 		double angleVel = turnController.step(-angleErr);
     	double distanceVel = distanceController.step(-distanceToClose);
@@ -225,6 +241,8 @@ void moveToPoint(Vector2 target) {
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	} while (!(distanceController.isSettled() && turnController.isSettled()));
+
+	strafe({ 0, 0 }, 0);
 }
 
 /**
