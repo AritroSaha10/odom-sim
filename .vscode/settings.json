@@ -78,6 +78,13 @@
         "complex": "cpp",
         "core": "cpp",
         "set": "cpp",
-        "jacobi": "cpp"
+        "jacobi": "cpp",
+        "bit": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "ranges": "cpp",
+        "stop_token": "cpp"
     }
 }

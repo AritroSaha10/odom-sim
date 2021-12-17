@@ -1,4 +1,5 @@
 #include "tracking.h"
+#include "odom.h"
 #include <vector>
 #include <iostream>
 #include <chrono>
@@ -24,6 +25,8 @@ TrackingData trackingData(STARTX, STARTY, STARTO);
 VirtualEncoder leftTrackingWheel(-WHEELBASE / 2);
 VirtualEncoder rightTrackingWheel(WHEELBASE / 2);
 VirtualEncoder backTrackingWheel(BACK_WHEEL_OFFSET, true);
+
+bool logPosition = false;
 
 /**
  * Round a double up to n places
@@ -72,6 +75,8 @@ void tracking() {
 	float right = 0;
 	float lateral = 0;
 	float angle = 0;
+
+	printf("Start X: %f   Start Y: %f", x, y);
 
 	// Start tracking loop
 	while(1) {
@@ -133,11 +138,13 @@ void tracking() {
 
 		trackingData.update(x, y, angle);
 
-		printf("X: %f Y: %f A: %f\n",
-			roundUp(trackingData.getX(), 2),
-			roundUp(trackingData.getY(), 2),
-			radToDeg(roundUp(trackingData.getHeading(), 2))
-		);
+		if (logPosition) {
+			printf("X: %f Y: %f A: %f\n",
+				roundUp(trackingData.getX(), 2),
+				roundUp(trackingData.getY(), 2),
+				radToDeg(roundUp(trackingData.getHeading(), 2))
+			);
+		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}

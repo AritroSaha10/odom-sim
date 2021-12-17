@@ -49,16 +49,21 @@ void XDrive::strafeGlobal(glm::vec2 dir, double turn) {
 void XDrive::strafe(glm::vec2 drive, double turn) {
     double straight = drive.y;
     double right = drive.x;
-
+    double distance = drive.length();
+    
     double scalar = 1;
-    if (abs(right) + abs(straight) + abs(turn) > 1) {
-        scalar = abs(right) + abs(straight) + abs(turn);
+    /*
+    if (abs(distance) + abs(turn) > 1) {
+        scalar = abs(distance) + abs(turn);
     }
+    */
 
-    motors[0].setPower((straight - right + turn) / scalar); // front right
-    motors[1].setPower((straight + right - turn) / scalar); // front left
-    motors[2].setPower((straight + right + turn) / scalar); // back  right
-    motors[3].setPower((straight - right - turn) / scalar); // back  left
+    // printf("Left Motor Power: %f\n", (straight + turn) / scalar);
+    // printf("Right Motor Power: %f\n", (straight - turn) / scalar);
+    motors[0].setPower((straight - turn) / scalar); // front right
+    motors[1].setPower((straight + turn) / scalar); // front left
+    motors[2].setPower((straight - turn) / scalar); // back  right
+    motors[3].setPower((straight + turn) / scalar); // back  left
 
     update();
 }
@@ -84,10 +89,10 @@ glm::vec2 calculateLinearFriction(glm::vec2 localVel, float friction) {
         scalar = abs(right) + abs(straight);
     }
 
-    Vector2 fr = rotateVector(Vector2(0, (straight - right) / scalar), degToRad( 45));  // front right
-    Vector2 fl = rotateVector(Vector2(0, (straight + right) / scalar), degToRad(-45));  // front left
-    Vector2 br = rotateVector(Vector2(0, (straight + right) / scalar), degToRad(-45));  // back  right
-    Vector2 bl = rotateVector(Vector2(0, (straight - right) / scalar), degToRad( 45));  // back  left
+    Vector2 fr = rotateVector(Vector2(0, (straight) / scalar), degToRad( 0));  // front right
+    Vector2 fl = rotateVector(Vector2(0, (straight) / scalar), degToRad(-0));  // front left
+    Vector2 br = rotateVector(Vector2(0, (straight) / scalar), degToRad(-0));  // back  right
+    Vector2 bl = rotateVector(Vector2(0, (straight) / scalar), degToRad( 0));  // back  left
     
     Vector2 net = fr + fl + br + bl;
     std::cout << net.getMagnitude() << std::endl;

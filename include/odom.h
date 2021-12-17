@@ -31,7 +31,7 @@ extern GLuint driveVBO;
 extern GLuint driveVAO;
 
 // Starting configuration (in/rad)
-#define STARTX 36
+#define STARTX 0
 #define STARTY 0
 #define STARTO 0
 

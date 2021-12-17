@@ -27,97 +27,33 @@ void myAutonomous() {
     // intake.fullReset();
 
     suspendDrive = true;
+    // turnToAngle(0);
 
-    // ------------- Used to test PID constants ------------- //
-    // while(1) {
-    //     strafeToPoint(Vector2(144 / 2, 144 / 2));
-    //     // strafeToPoint(Vector2(30, 144 - 30));
-    //     // strafeToPoint(Vector2(144 - 30, 144 - 30));
-    //     // strafeToPoint(Vector2(144 - 30, 30));
-    //     // strafeToPoint(Vector2(30, 30));
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    
+    
+    // Go to starting position
+    Vector2 start = Vector2(20, 10);
+    strafeToPoint(start);
+    printf("---- Robot is in starting position ----\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-    //     strafeToPoint(Vector2(40, 40));
-    //     strafeToPoint(Vector2(50, 40));
+    /*
+    Vector2 target1 = Vector2(70, 70);
+    strafeToPoint(target1);
+    printf("---- Moved robot to (70, 70) ----\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-    //     turnToAngle(90);
-    //     turnToAngle(180);
-    //     turnToAngle(-90);
-    //     turnToAngle(90);
-    // }
-
-    // Run the desired auto routine
-    // fullAuto();
-
-    strafeToPoint(Vector2(70, 70));
-    turnToAngle(90);
-    turnToAngle(190);
-    turnToAngle(359);
-    return;
-
-    // Flipout and get second ball
-    flipout();
-    std::this_thread::sleep_for(std::chrono::milliseconds(400));
-    in();
-    strafeRelative(Vector2(0, 18), 0);
-	stopRollers();
-
-    // Score a ball in the first goal
-    alignAndShoot(goalBL, 135, 1);
-
-    // Get the center-bottom-middle ball
-	strafeToPoint(Vector2(24, 18));
-	Vector2 secondBall(36 + 36, 42);
-	turnToAngle(radToDeg((secondBall-trackingData.getPos()).getAngle()) - 90);
-	in();
-	strafeToPoint(secondBall);
-
-    // Score 2 in the center-bottom goal
-    turnToAngle(-180);
-    stopRollers();
-    alignAndShoot(goalBC, radToDeg(trackingData.getHeading()), 2);
-
-    // Pick up 4th ball
-	strafeToPoint(secondBall);
-	Vector2 thirdBall(secondBall.getX() + 36, secondBall.getY() - 26);
-	turnToAngle(radToDeg((thirdBall - trackingData.getPos()).getAngle()) - 90);
-	in();
-	strafeToPoint(thirdBall);
-
-    // Score 1 in the bottom-right
-    turnToAngle(-135);
-    stopRollers();
-    alignAndShoot(goalBR, -135, 1);
-
-    // Back up and pick up the 5th ball
-    strafeRelative(Vector2(-20, 20));
-    in();
-    printf("\n\nBRUH\n\n");
-    strafeToOrientation(Vector2(114.5, 45), -10);
-    printf("\n\nBRUH\n\n");
-
-    strafeToPoint(Vector2(114.5, 67));
-
-    // Score in the 4th goal
-    turnToAngle(-90);
-    stopRollers();
-    alignAndShoot(goalCR, -90, 1);
-    strafeRelative(Vector2(-20, 0));
-
-    Vector2 topRightBall = thirdBall + Vector2(0, 86);
-    in();
-    strafeToOrientation(topRightBall, -1);
-    turnToAngle(-50);
-    stopRollers();
-    strafeToPoint(topRightBall + Vector2(20, 10));
-    shootStaggered(3);
-    stopRollers();
+    Vector2 target2 = Vector2(20, 20);
+    strafeToPoint(target2);
+    printf("---- Moved robot to (70, 70) ----\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    */
 
     suspendDrive = false;
+    logPosition = true;
 
-    // UNCOMMENT THIS IN THE PROS PROJECT
-	// rollers.reset();
-	// intake.reset();
-	// update.remove();
+    printf("---- You may now drive in X-Drive mode ----\n");
 }
 
 /**

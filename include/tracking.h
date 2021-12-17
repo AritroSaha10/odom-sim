@@ -96,4 +96,6 @@ extern VirtualEncoder rightTrackingWheel;
 extern VirtualEncoder backTrackingWheel;
 extern XDrive chassis;
 
+extern bool logPosition;
+
 #endif

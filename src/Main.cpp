@@ -198,7 +198,7 @@ int main()
 	driveShader.use();
 	driveShader.setInt("text", 0);
 	unsigned int driveTexture;
-	loadTexture(driveTexture, "textures/RedTexture.png");
+	loadTexture(driveTexture, "textures/botTexture2.png");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, driveTexture);
 

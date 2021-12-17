@@ -48,6 +48,7 @@ void strafe(Vector2 dir, double turn);
 void strafeToOrientation(Vector2 target, double angle);
 void strafeToPoint(Vector2 target);
 void turnToAngle(double target);
+void turnRelative(double target);
 void alignAndShoot(Vector2 goal, double angle, uint8_t balls, bool intake = false);
 
 void strafeRelative(Vector2 offset, double aOffset = 0);
