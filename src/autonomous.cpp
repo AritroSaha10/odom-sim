@@ -35,7 +35,7 @@ void myAutonomous() {
     // Go to starting position
     Vector2 start = Vector2(70, 70);
     // strafeToPoint(start);
-    turnToAngle(90);
+    // turnToAngle(90);
     printf("---- Robot is in starting position ----\n");
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 

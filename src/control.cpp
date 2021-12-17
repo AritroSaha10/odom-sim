@@ -197,7 +197,7 @@ double rotateAngle90(double angle) {
   return angle;
 }
 
-void moveToPoint(Vector2 target) {
+void strafeToPoint(Vector2 target) {
 	double time = glfwGetTime();
 	PIDController distanceController(0, driveConstants, DISTANCE_TOLERANCE, DISTANCE_INTEGRAL_TOLERANCE);
 	PIDController turnController(0, turnConstants, TURN_TOLERANCE, TURN_INTEGRAL_TOLERANCE);
@@ -231,7 +231,7 @@ void moveToPoint(Vector2 target) {
     	angleErr = rotateAngle90(angleErr);
 
 		double angleVel = turnController.step(-angleErr);
-    	double distanceVel = distanceController.step(-distanceToClose);
+    	double distanceVel = distanceController.step(-distanceErr);
 
 		strafe(Vector2(0, distanceVel), angleVel * 2);
 
