@@ -67,6 +67,10 @@ Vector2 rotateVector(Vector2 vec, double angle);
 Vector2 toLocalCoordinates(Vector2 vec);
 Vector2 toGlobalCoordinates(Vector2 vec);
 double dot(Vector2 v1, Vector2 v2);
+Vector2 closest(Vector2 current, Vector2 head, Vector2 target);
+Vector2 closest(Vector2 current, Vector2 target);
+double angleToPoint(Vector2 v1);
+double distanceToPoint(Vector2 v1, Vector2 v2);
 extern TrackingData trackingData;
 
 // Simulate the chassis' tracking wheels, replaces pros::ADIEncoder

@@ -171,6 +171,19 @@ Vector2 toLocalCoordinates(Vector2 vec) {
 	return rotateVector(vec, localAngle);
 }
 
+Vector2 closest(Vector2 current, Vector2 head, Vector2 target) {
+  Vector2 n = head.normalize();
+  Vector2 v = target - current;
+  double d = dot(v, n);
+  return current + (n * d);
+}
+
+Vector2 closest(Vector2 current, Vector2 target) {
+  return closest(current,
+                 Vector2(sin(current.getAngle()), cos(current.getAngle())),
+                 target);
+}
+
 /**
  * Rotate a direction vector to global space (relative to the field)
  * 
@@ -194,6 +207,20 @@ double dot(Vector2 v1, Vector2 v2) {
 	return (v1.getX() * v2.getX()) + (v1.getY() * v2.getY());
 }
 
+double angleToPoint(Vector2 v1) {
+	return (
+		atan2(
+			v1.getX() - trackingData.getX(),
+			v1.getY() - trackingData.getY())
+		) 
+		- trackingData.getHeading();
+}
+
+double distanceToPoint(Vector2 v1, Vector2 v2) {
+	double xDiff = v2.getX() - v1.getX();
+	double yDiff = v2.getY() - v1.getY();
+	return std::sqrt(std::pow(xDiff, 2) + std::pow(yDiff, 2));
+}
 /**
  * Rotate a 2 dimensional vector by a given angle
  * 
@@ -362,7 +389,7 @@ void VirtualEncoder::reset() {
 */
 void VirtualEncoder::update(Vector2 dP, double dO) {
 	if(dO == 0) {
-		this->ticks += (lateral ? dP.getX() : dP.getY()) * TRACKING_WHEEL_INCH_TO_DEGREE;
+		this->ticks += (lateral ? dP.getX() : dP.getY()) * DRIVE_DEGREE_TO_INCH;
 		return;
 	}
 

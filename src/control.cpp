@@ -160,6 +160,8 @@ void strafeToOrientation(Vector2 target, double angle) {
  * 
  * @param target the target spot on the field in global space
 */
+
+/*
 void strafeToPoint(Vector2 target) {
 	double time = glfwGetTime();
 	PIDController distanceController(0, driveConstants, DISTANCE_TOLERANCE, DISTANCE_INTEGRAL_TOLERANCE);
@@ -176,6 +178,71 @@ void strafeToPoint(Vector2 target) {
 
     	std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	} while(!distanceController.isSettled());
+}
+*/
+
+
+double rotateAngle180(double angle) {
+  double newAngle = radToDeg(angle) - 360.0 * std::floor((radToDeg(angle) + 180.0) * (1.0 / 360.0));
+  // if(newAngle == -180_deg) newAngle = 180_deg;
+  return degToRad(newAngle);
+}
+
+double rotateAngle90(double angle) {
+  angle = rotateAngle180(angle);
+  if (abs(angle) > 90) {
+    angle += 90;
+    angle = rotateAngle180(angle);
+  }
+  return angle;
+}
+
+void moveToPoint(Vector2 target) {
+	double time = glfwGetTime();
+	PIDController distanceController(0, driveConstants, DISTANCE_TOLERANCE, DISTANCE_INTEGRAL_TOLERANCE);
+	PIDController turnController(0, turnConstants, TURN_TOLERANCE, TURN_INTEGRAL_TOLERANCE);
+
+	double angleErr = 0, distanceErr = 0;
+
+	do {
+		Vector2 closestPoint = closest(trackingData.getPos(), target);
+
+		double angleToClose = angleToPoint(closestPoint);
+		double angleToTarget = angleToPoint(target);
+
+		double distanceToClose = distanceToPoint(trackingData.getPos(), closestPoint);
+		double distanceToTarget = distanceToPoint(trackingData.getPos(), target);
+
+		// Go backwards
+		if (abs(angleToClose) >= degToRad(90)) distanceToClose = -distanceToClose;
+
+		// 0.1 should be the settle radius but IDK
+		if (abs(distanceToTarget) < 0.1) {
+			angleErr = 0;
+			// used for settling
+			distanceErr = distanceToClose;
+		} else {
+			angleErr = angleToTarget;
+			// used for settling
+			distanceErr = distanceToTarget;
+		}
+
+		// rotate angle to be +- 90
+    	angleErr = rotateAngle90(angleErr);
+
+		double angleVel = turnController.step(-angleErr);
+    	double distanceVel = distanceController.step(-distanceToClose);
+
+		strafe(Vector2(0, distanceVel), angleVel * 2);
+
+		if (glfwGetTime() - time > 4) {
+			break;
+		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	} while (!(distanceController.isSettled() && turnController.isSettled()));
+
+	strafe({ 0, 0 }, 0);
 }
 
 /**
