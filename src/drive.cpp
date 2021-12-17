@@ -89,10 +89,10 @@ glm::vec2 calculateLinearFriction(glm::vec2 localVel, float friction) {
         scalar = abs(right) + abs(straight);
     }
 
-    Vector2 fr = rotateVector(Vector2(0, (straight) / scalar), degToRad( 0));  // front right
-    Vector2 fl = rotateVector(Vector2(0, (straight) / scalar), degToRad(-0));  // front left
-    Vector2 br = rotateVector(Vector2(0, (straight) / scalar), degToRad(-0));  // back  right
-    Vector2 bl = rotateVector(Vector2(0, (straight) / scalar), degToRad( 0));  // back  left
+    Vector2 fr = rotateVector(Vector2(0, (straight - right) / scalar), degToRad( 0));  // front right
+    Vector2 fl = rotateVector(Vector2(0, (straight + right) / scalar), degToRad(-0));  // front left
+    Vector2 br = rotateVector(Vector2(0, (straight - right) / scalar), degToRad(-0));  // back  right
+    Vector2 bl = rotateVector(Vector2(0, (straight + right) / scalar), degToRad( 0));  // back  left
     
     Vector2 net = fr + fl + br + bl;
     std::cout << net.getMagnitude() << std::endl;

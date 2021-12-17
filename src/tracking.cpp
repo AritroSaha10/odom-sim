@@ -66,85 +66,92 @@ double degToRad(double d) {
 void tracking() {
 
 	// Initialize variables
-	lLast = 0;
-	rLast = 0;
-	bLast = 0;
-	float x = trackingData.getX();
-	float y = trackingData.getY();
+	Vector2 globalPos{ trackingData.getX(), trackingData.getY() };
+
 	float left = 0;
 	float right = 0;
 	float lateral = 0;
 	float angle = 0;
 
-	printf("Start X: %f   Start Y: %f", x, y);
 
-	// Start tracking loop
-	while(1) {
-		float localX, localY = 0;
+	// Initialize variables
+    lLast = 0; // Last encoder value of left
+    rLast = 0; // Last encoder value of right
+    bLast = 0; // Last encoder value of back
 
-		// Get encoder data
-		float leftEncoder = leftTrackingWheel.read();
-		float rightEncoder = rightTrackingWheel.read();
-		float backEncoder = backTrackingWheel.read();
+    // Tracking loop
+    while (true) {
+		Vector2 localPos{ 0, 0 };
 
-		// Calculate deltas
-		lDelta = leftEncoder - lLast;
-		rDelta = rightEncoder - rLast;
-		bDelta = backEncoder - bLast;
-		lDist = lDelta * TRACKING_WHEEL_DEGREE_TO_INCH;
-		rDist = rDelta * TRACKING_WHEEL_DEGREE_TO_INCH;
-		bDist = bDelta * TRACKING_WHEEL_DEGREE_TO_INCH;
+        // Get encoder data, directly fron wheels because no tracking wheels yet
+        float lEncVal = leftTrackingWheel.read();
+        float rEncVal = rightTrackingWheel.read();
+        float bEncVal = 0;
 
-		// Store readings for next deltas
-		lLast = leftEncoder;
-		rLast =	rightEncoder;
-		bLast = backEncoder;
+        // Calculate delta values
+        lDelta = lEncVal - lLast;
+        rDelta = rEncVal - rLast;
+        bDelta = bEncVal - bLast;
 
-		// Increment persistent variables
-		left += lDist;
-		right += rDist;
-		lateral += bDist;
+        // Calculate IRL distances from deltas
+        lDist = lDelta * DRIVE_DEGREE_TO_INCH;
+        rDist = rDelta * DRIVE_DEGREE_TO_INCH;
+        bDist = bDelta * DRIVE_DEGREE_TO_INCH;
 
-		// Calculate arc angle
-		float holdAngle = angle;
-		angle = (right - left)/(lrOffset * 2.0f);
-		aDelta = angle - holdAngle;
+        // Update last values for next iter since we don't need to use last values for this iteration
+        lLast = lEncVal;
+        rLast = rEncVal;
+        bLast = bEncVal;
 
-		// If theres an arc
-		if(aDelta) {
-			float radius = (rDist / aDelta) - lrOffset;
-			halfA = aDelta/2.0f;
-			float sinHalf = sin(halfA);
-			localY = (radius * sinHalf) * 2.0f;
+        // Update total distance vars
+        left += lDist;
+        right += rDist;
+        lateral += bDist;
 
-			float backRadius = (bDist / aDelta) - BACK_WHEEL_OFFSET;
-			localX = (backRadius * sinHalf) * 2.0f;
-		}
-		// If no arc
-		else {
-			halfA = 0;
-			aDelta = 0;
-			localY = (rDist+lDist)/2;
-			localX = bDist;
-		}
+        // Calculate new absolute orientation
+        float prevAngle = angle; // Previous angle, used for delta
+        angle = (right - left) / WHEELBASE;
 
-		float p = -(halfA + holdAngle); // The global ending angle of the robot
-		float cosP = cos(p);
-		float sinP = sin(p);
+        // Get angle delta
+        aDelta = angle - prevAngle;
 
-		// Update the global position
-		y += (localY * cosP) - (localX * sinP);
-		x += (localY * sinP) + (localX * cosP);
+        // Calculate using different formulas based on if orientation change
+        float avgLRDelta = (lDist + rDist) / 2; // Average of delta distance travelled by left and right wheels
+        if (aDelta == 0.0f) {
+            // Set the local positions to the distances travelled since the angle didn't change
+            localPos = Vector2(bDist, avgLRDelta);
+        } else {
+            // Use the angle to calculate the local position since angle did change
+            localPos = Vector2(
+                2 * sin(aDelta / 2) * (bDist / aDelta - bOffset),
+                2 * sin(aDelta / 2) * (rDist / aDelta - lrOffset)
+            );
+        }
 
-		trackingData.update(x, y, angle);
+        // Calculate the average orientation
+        // If any issues arise, try changing aDelta to aDelta/2
+        float avgAngle = -(prevAngle + (aDelta / 2));
 
-		if (logPosition) {
-			printf("X: %f Y: %f A: %f\n",
-				roundUp(trackingData.getX(), 2),
-				roundUp(trackingData.getY(), 2),
-				radToDeg(roundUp(trackingData.getHeading(), 2))
-			);
-		}
+        // Calculate global offset https://www.mathsisfun.com/polar-cartesian-coordinates.html
+        float globalOffsetX = cos(avgAngle); // cos(θ) = x 
+        float globalOffsetY = sin(avgAngle); // sin(θ) = y 
+
+        // Finally, update the global position
+        globalPos = Vector2(
+            trackingData.getPos().getX() + (localPos.getY() * globalOffsetY) + (localPos.getX() * globalOffsetX),
+            trackingData.getPos().getY() + (localPos.getY() * globalOffsetX) - (localPos.getX() * globalOffsetY)
+        );
+
+        // Update tracking data
+        // trackingData.update(globalPos.getX(), globalPos.getY(), degToRad(myImu.get_rotation()));
+        trackingData.update(globalPos.getX(), globalPos.getY(), trackingData.getHeading() + aDelta);
+
+        // Debug print
+		printf("X: %f, Y: %f, A: %f\n", 
+			trackingData.getPos().getX(), 
+			trackingData.getPos().getY(), 
+			-radToDeg(trackingData.getHeading())
+		);
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}

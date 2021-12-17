@@ -168,7 +168,7 @@ void strafeToPoint(Vector2 target) {
 		Vector2 delta = target - trackingData.getPos();
 		float vel = -distanceController.step(delta.getMagnitude());
 		Vector2 driveVec = rotateVector(Vector2(vel, 0), delta.getAngle());
-		strafe(driveVec, 0);
+		strafe(driveVec, delta.getAngle());
 
 		if(glfwGetTime() - time > 4) {
 			break;
@@ -195,10 +195,11 @@ void turnToAngle(double target) {
 
 	double time = glfwGetTime();
 	PIDController turnController(target, turnConstants, TURN_TOLERANCE, TURN_INTEGRAL_TOLERANCE);
-
+	
 	do {
-		float vel = turnController.step(trackingData.getHeading());
+		float vel = -turnController.step(trackingData.getHeading());
 		strafe(Vector2(0, 0), vel);
+		printf("Error: %f\n", turnController.getError());
 
 		if(glfwGetTime() - time > 4) {
 			break;

@@ -10,8 +10,8 @@
 #define _USE_MATH_DEFINES
 
 // Robot metrics (in)
-const double wheelbase = 10.25;
-const double backOffset = 6;
+const double wheelbase = 14;
+const double backOffset = 0;
 
 // Manually tuned physical constants
 const double angularStoppingDecel = 10 * M_PI;
@@ -74,10 +74,10 @@ private:
 
     // Drive motors in X-drive configuration
     std::vector<Motor> motors = {
-        Motor(glm::vec2( wheelbase / 24,  wheelbase / 24), degToRad( 45)), // front right
-        Motor(glm::vec2(-wheelbase / 24,  wheelbase / 24), degToRad(-45)), // front left
-        Motor(glm::vec2( wheelbase / 24, -wheelbase / 24), degToRad(-45)), // back  right
-        Motor(glm::vec2(-wheelbase / 24, -wheelbase / 24), degToRad( 45))  // back  left
+        Motor(glm::vec2( wheelbase / 24,  wheelbase / 24), degToRad( 0)), // front right
+        Motor(glm::vec2(-wheelbase / 24,  wheelbase / 24), degToRad(-0)), // front left
+        Motor(glm::vec2( wheelbase / 24, -wheelbase / 24), degToRad(-0)), // back  right
+        Motor(glm::vec2(-wheelbase / 24, -wheelbase / 24), degToRad( 0))  // back  left
     };
 
     // Forces
