@@ -92,6 +92,7 @@ public:
 
     // Interface
     void strafe(glm::vec2 drive, double turn);
+    void tank(double, double);
     void update();
     void strafeGlobal(glm::vec2 dir, double turn);
 

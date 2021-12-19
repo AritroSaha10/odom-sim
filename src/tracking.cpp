@@ -147,11 +147,13 @@ void tracking() {
         trackingData.update(globalPos.getX(), globalPos.getY(), trackingData.getHeading() + aDelta);
 
         // Debug print
+		/*
 		printf("X: %f, Y: %f, A: %f\n", 
 			trackingData.getPos().getX(), 
 			trackingData.getPos().getY(), 
 			-radToDeg(trackingData.getHeading())
 		);
+		*/
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
@@ -389,7 +391,7 @@ void VirtualEncoder::reset() {
 */
 void VirtualEncoder::update(Vector2 dP, double dO) {
 	if(dO == 0) {
-		this->ticks += (lateral ? dP.getX() : dP.getY()) * TRACKING_WHEEL_DEGREE_TO_INCH;
+		this->ticks += (lateral ? dP.getX() : dP.getY()) * TRACKING_WHEEL_INCH_TO_DEGREE;
 		return;
 	}
 
@@ -398,5 +400,5 @@ void VirtualEncoder::update(Vector2 dP, double dO) {
 	double newX = disp.getX() / 2 / sin(dO/2);
 	double newY = disp.getY() / 2 / sin(dO/2);
 	double dist = lateral ? newX : newY;
-	this->ticks += ((dist + offset) * dO) * TRACKING_WHEEL_DEGREE_TO_INCH;
+	this->ticks += ((dist + offset) * dO) * TRACKING_WHEEL_INCH_TO_DEGREE;
 }

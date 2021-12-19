@@ -48,22 +48,39 @@ void XDrive::strafeGlobal(glm::vec2 dir, double turn) {
 */
 void XDrive::strafe(glm::vec2 drive, double turn) {
     double straight = drive.y;
-    double right = drive.x;
-    double distance = drive.length();
+
+    double leftOutput = straight + turn;
+    double rightOutput = straight - turn;
     
-    double scalar = 1;
-    /*
-    if (abs(distance) + abs(turn) > 1) {
-        scalar = abs(distance) + abs(turn);
+    double scalar = std::max(std::abs(leftOutput), std::abs(rightOutput));
+    if (scalar > 1) {
+        leftOutput /= scalar;
+        rightOutput /= scalar;
     }
-    */
 
     // printf("Left Motor Power: %f\n", (straight + turn) / scalar);
     // printf("Right Motor Power: %f\n", (straight - turn) / scalar);
-    motors[0].setPower((straight - turn) / scalar); // front right
-    motors[1].setPower((straight + turn) / scalar); // front left
-    motors[2].setPower((straight - turn) / scalar); // back  right
-    motors[3].setPower((straight + turn) / scalar); // back  left
+    motors[0].setPower(rightOutput); // front right
+    motors[1].setPower(leftOutput); // front left
+    motors[2].setPower(rightOutput); // back  right
+    motors[3].setPower(leftOutput); // back  left
+
+    update();
+}
+
+void XDrive::tank(double leftOutput, double rightOutput) {
+    double scalar = std::max(std::abs(leftOutput), std::abs(rightOutput));
+    if (scalar > 1) {
+        leftOutput /= scalar;
+        rightOutput /= scalar;
+    }
+
+    // printf("Left Motor Power: %f\n", (straight + turn) / scalar);
+    // printf("Right Motor Power: %f\n", (straight - turn) / scalar);
+    motors[0].setPower(rightOutput); // front right
+    motors[1].setPower(leftOutput); // front left
+    motors[2].setPower(rightOutput); // back  right
+    motors[3].setPower(leftOutput); // back  left
 
     update();
 }
@@ -95,7 +112,7 @@ glm::vec2 calculateLinearFriction(glm::vec2 localVel, float friction) {
     Vector2 bl = rotateVector(Vector2(0, (straight + right) / scalar), degToRad( 0));  // back  left
     
     Vector2 net = fr + fl + br + bl;
-    std::cout << net.getMagnitude() << std::endl;
+    // std::cout << net.getMagnitude() << std::endl;
 
     glm::vec2 viscousFriction = -localVel * (float)viscousFrictionCoeff;
 

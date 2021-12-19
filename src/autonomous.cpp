@@ -34,10 +34,44 @@ void myAutonomous() {
     
     // Go to starting position
     Vector2 start = Vector2(70, 70);
-    // strafeToPoint(start);
-    // turnToAngle(90);
+
+    /*
+    while (true) {
+        strafe({ 0, 5.5 }, 1.5);
+        std::this_thread::sleep_for(std::chrono::milliseconds(25));
+    }
+    */
+
+    // turnToAngle(-45);
+    
+    // strafeToOrientation(start, 0);
+
+    // trackingData.suspendAngleModulus();
+
+    // turnToAngle(-90);
+    // turnAndMoveToPoint2({ 10, 20 });
+    // turnToAngle(-90);
     printf("---- Robot is in starting position ----\n");
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    turnAndMoveToPoint2({ 68, 20 });
+    turnToAngle(-90);
+    printf("---- Robot is getting MOGO from center ----\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    printf("---- Robot got MOGO ----\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+
+    turnAndMoveToPoint2({ 35, 11 });
+    turnToAngle(66);
+    printf("---- Robot is getting alliance MOGO ----\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    printf("---- Robot got MOGO ----\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+
+    turnAndMoveToPoint2({ 10, 20 });
+    turnToAngle(-90);
+    printf("---- Robot in starting position ----\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(250));
 
     /*
     Vector2 target1 = Vector2(70, 70);

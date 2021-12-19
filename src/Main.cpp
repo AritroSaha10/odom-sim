@@ -36,6 +36,9 @@ double straight = 0;
 double right = 0;;
 double turn = 0;
 
+double leftTank = 0;
+double rightTank = 0;
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -112,6 +115,43 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 	right = _right;
 	turn = _turn;
 }
+
+/**
+ * Process dirve comamnds from users (controller)
+*/
+void fetchControllerInput() {
+	int count;
+	const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
+
+	// Assuming Xbox One controller with 6 axis
+	float inputs[6] = {
+		1, // Left joystick X axis
+		-1, // Left joystick Y axis (reversed)
+		1, // Right joystick X axis
+		-1, // Right joystick Y axis (reversed)
+		1, // LT Trigger
+		1, // RT Trigger
+	};
+
+	for (int i = 0; i < count; i++) {
+		inputs[i] *= axes[i];
+	}
+
+	/* ARCADE
+	straight = inputs[1];
+	right = 0; // None needed for skid steer drivetrain
+	turn = -inputs[2] / 2 + 0.1;
+	*/
+
+	const double DEADZONE_FIX = 0.2; // Amount to adjust for deadzone
+
+	int leftNeg = inputs[1] < 0 ? -1 : 1;
+	int rightNeg = inputs[3] < 0 ? -1 : 1;
+
+	// Tank
+	leftTank = pow(inputs[1], 3);
+	rightTank = pow(inputs[3], 3);
+} 
 
 int main()
 {
@@ -225,6 +265,9 @@ int main()
 	//Render Loop
 	while (!glfwWindowShouldClose(window))
 	{
+		// Process any controller inputs
+		fetchControllerInput();
+
 		// Quit
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(window, true);
@@ -241,7 +284,12 @@ int main()
 
 		// Check if auto is running before allowing manual drive
 		if(!suspendDrive) {
-			chassis.strafe(glm::vec2(right, straight), turn);
+
+			// ARCADE
+			// chassis.strafe(glm::vec2(right, straight), -turn);
+
+			// Tank
+			chassis.tank(leftTank, rightTank);
 		}
 
 		//Pass matrices to the shader through a uniform
