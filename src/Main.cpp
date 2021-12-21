@@ -18,6 +18,9 @@
 #include "macros.h"
 #include "autonomous.h"
 
+// 0 if arcade, 1 if tank
+#define USE_TANK 0
+
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
@@ -137,20 +140,21 @@ void fetchControllerInput() {
 		inputs[i] *= axes[i];
 	}
 
-	/* ARCADE
-	straight = inputs[1];
-	right = 0; // None needed for skid steer drivetrain
-	turn = -inputs[2] / 2 + 0.1;
-	*/
-
 	const double DEADZONE_FIX = 0.2; // Amount to adjust for deadzone
 
 	int leftNeg = inputs[1] < 0 ? -1 : 1;
 	int rightNeg = inputs[3] < 0 ? -1 : 1;
 
-	// Tank
-	leftTank = pow(inputs[1], 3);
-	rightTank = pow(inputs[3], 3);
+	if (USE_TANK) {
+		// Tank
+		leftTank = pow(inputs[1], 3);
+		rightTank = pow(inputs[3], 3);
+	} else {
+		// Arcade
+		straight = inputs[1];
+		right = 0; // None needed for skid steer drivetrain
+		turn = -inputs[2] / 2 + 0.1;
+	}
 } 
 
 int main()
@@ -266,7 +270,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// Process any controller inputs
-		fetchControllerInput();
+		// fetchControllerInput();
 
 		// Quit
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
@@ -284,12 +288,13 @@ int main()
 
 		// Check if auto is running before allowing manual drive
 		if(!suspendDrive) {
-
-			// ARCADE
-			// chassis.strafe(glm::vec2(right, straight), -turn);
-
-			// Tank
-			chassis.tank(leftTank, rightTank);
+			if (USE_TANK) {
+				// Tank
+				chassis.tank(leftTank, rightTank);
+			} else {
+				// ARCADE
+				chassis.strafe(glm::vec2(right, straight), -turn);
+			}
 		}
 
 		//Pass matrices to the shader through a uniform

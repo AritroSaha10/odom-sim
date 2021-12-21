@@ -243,31 +243,28 @@ void strafeToPoint(Vector2 target) {
 void turnAndMoveToPoint(Vector2 target) {
 	double time = glfwGetTime();
 	PIDController distanceController(0, driveConstants, 0, 0);
-	PIDController turnController(0, turnConstants, 0, 0);
+	PIDController turnController(target.getAngle(), turnConstants, 0, 0);
 
 	double angleErr = 0, distanceErr = 0;
 
 	do {
-		Vector2 closestPoint = closest(trackingData.getPos(), target);
-		// double distanceToTarget = distanceToPoint(trackingData.getPos(), target);
-		// double distanceToTarget = target.getY() - trackingData.getY(); 
-		double distToTravel = dot(target - trackingData.getPos(), trackingData.getForward()); 
-		double angleToTarget = angleToPoint(target);
+		double tVel = turnController.step(trackingData.getHeading());
 
-		angleErr = angleToTarget;
-		distanceErr = distToTravel;
-		// rotate angle to be +- 90
-    	angleErr = rotateAngle90(angleErr);
+		Vector2 delta = target - trackingData.getPos();
+		Vector2 dNorm = delta.normalize();
 
-		double angleVel = turnController.step(-angleErr);
-    	double distanceVel = distanceController.step(-distanceErr);
-		// printf("D Vel: %f --- A Vel: %f\n", distanceVel, angleVel);
-		// printf("D to Target: %f --- A to Target: %f\n", distanceToTarget, angleToTarget);
-		printf("D Err: %f --- A Err: %f\n", distanceErr, angleErr);
+		Vector2 alignment = rotateVector(dNorm, turnController.getError());
+		double dotScalar = dot(alignment, dNorm);
 
-		strafe(Vector2(0, distanceVel), angleVel);
+		Vector2 driveVec(0, 0);
+		if (dotScalar > 0) {
+			float strVel = -distanceController.step(delta.getMagnitude() * dotScalar);
+			driveVec = rotateVector(Vector2(strVel, 0), delta.getAngle());
+		}
 
-		if (glfwGetTime() - time > 20) {
+		strafe(driveVec, tVel);
+
+		if (glfwGetTime() - time > 4) {
 			break;
 		}
 
@@ -277,24 +274,30 @@ void turnAndMoveToPoint(Vector2 target) {
 	strafe({ 0, 0 }, 0);
 }
 
+double constrainAngle180(double theta) {
+	return theta - 360 * std::floor((theta + 180.0) / 360.0);
+}
+
 void turnAndMoveToPoint2(Vector2 target) {
 	double time = glfwGetTime();
 	PIDController distanceController(0, driveConstants, DISTANCE_TOLERANCE, DISTANCE_INTEGRAL_TOLERANCE);
 
-	printf("Angle to point: %f\n", radToDeg(angleToPoint(target)));
-	
-	turnToAngle(-radToDeg(angleToPoint(target)));
+	double angleToTarget = radToDeg((target - trackingData.getPos()).getAngle());
+	printf("\n\n\n\n--- Angle to point: %f --- \n\n\n\n\n", angleToTarget);
 
+	turnToAngle(angleToTarget - 90);
+
+
+	#define VECTOR_LENGTH(vec) sqrt(pow(vec.getX(), 2) + pow(vec.getY(), 2))
 	
 	do {
-		// double distanceToTarget = distanceToPoint(trackingData.getPos(), target);
-		double distanceToTarget = target.getY() - trackingData.getY(); 
-
+		
+		double distanceToTarget = VECTOR_LENGTH(target) - VECTOR_LENGTH(trackingData.getPos());
     	double distanceVel = distanceController.step(-distanceToTarget);
 
 		strafe(Vector2(0, distanceVel), 0);
 
-		if (glfwGetTime() - time > 20) {
+		if (glfwGetTime() - time > 4) {
 			break;
 		}
 
@@ -312,10 +315,14 @@ void turnAndMoveToPoint2(Vector2 target) {
 void turnToAngle(double target) {
 	trackingData.suspendAngleModulus();
 
-    target = target * M_PI / 180;
+    target = degToRad(target);
+
+	
 	if(abs(target - trackingData.getHeading()) > degToRad(180)) {
 		target = flipAngle(target);
 	}
+	
+	
 
 	double time = glfwGetTime();
 	PIDController turnController(target, turnConstants, TURN_TOLERANCE, TURN_INTEGRAL_TOLERANCE);
@@ -324,12 +331,14 @@ void turnToAngle(double target) {
 		float vel = -turnController.step(trackingData.getHeading());
 		strafe(Vector2(0, 0), vel);
 
-		if(glfwGetTime() - time > 4) {
+		if(glfwGetTime() - time > 10) {
 			break;
 		}
 
     	std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	} while(!turnController.isSettled());
+
+	printf("\n\nTurning to %f is done!\n\n", radToDeg(target));
 
 	trackingData.resumeAngleModulus();
 }

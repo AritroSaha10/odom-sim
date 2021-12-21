@@ -14,6 +14,8 @@ Vector2 goalCR(122, 67);
 Vector2 goalBR(140 - 17.5, 5.5);
 Vector2 goalBC(70, 7);
 
+Vector2 startingPosRedBot(12, 35);
+
 void fullAuto();
 void homeRowAuto();
 
@@ -31,47 +33,41 @@ void myAutonomous() {
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     
+    // turnAndMoveToPoint({ 70, 0 });
+    
+    
     
     // Go to starting position
-    Vector2 start = Vector2(70, 70);
+    turnAndMoveToPoint2(startingPosRedBot);
+    turnToAngle(-90);
+    printf("---- Moved robot to match starting position ----\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-    /*
-    while (true) {
-        strafe({ 0, 5.5 }, 1.5);
-        std::this_thread::sleep_for(std::chrono::milliseconds(25));
-    }
-    */
+    // Pick up Bottom Neutral MOGO
+    turnAndMoveToPoint2({ 70, 35 });
+    turnToAngle(-90);
+    printf("--- Picking up bottom neutral MOGO ---\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Predicted time to pick it up
+    printf("--- Picked up bottom neutral MOGO, bringing it back... ---\n");
 
-    // turnToAngle(-45);
+    // Bring back Bottom Neutral MOGO
+    turnAndMoveToPoint2({ 35, 35 });
+    std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Predicted time to put it down
+    printf("--- Put MOGO down! ---\n");
+
+    // Get alliance MOGO
+    turnAndMoveToPoint2({ 35, 14 });
+    turnToAngle(-120);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500)); // Predicted time to pick it up
+    printf("--- Picked up alliance MOGO ---\n");
+
+    // Pick up rings onto alliance MOGO
+    turnAndMoveToPoint2({ 30, 23 });
+    turnToAngle(-90);
+    turnAndMoveToPoint2({ 60, 23 });
+    printf("--- Added rings to alliance MOGO! ---\n");
     
-    // strafeToOrientation(start, 0);
-
-    // trackingData.suspendAngleModulus();
-
-    // turnToAngle(-90);
-    // turnAndMoveToPoint2({ 10, 20 });
-    // turnToAngle(-90);
-    printf("---- Robot is in starting position ----\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-    turnAndMoveToPoint2({ 68, 20 });
-    turnToAngle(-90);
-    printf("---- Robot is getting MOGO from center ----\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(250));
-    printf("---- Robot got MOGO ----\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(250));
-
-    turnAndMoveToPoint2({ 35, 11 });
-    turnToAngle(66);
-    printf("---- Robot is getting alliance MOGO ----\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(250));
-    printf("---- Robot got MOGO ----\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(250));
-
-    turnAndMoveToPoint2({ 10, 20 });
-    turnToAngle(-90);
-    printf("---- Robot in starting position ----\n");
-    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    
 
     /*
     Vector2 target1 = Vector2(70, 70);
