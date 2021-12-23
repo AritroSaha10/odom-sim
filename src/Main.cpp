@@ -269,9 +269,6 @@ int main()
 	//Render Loop
 	while (!glfwWindowShouldClose(window))
 	{
-		// Process any controller inputs
-		// fetchControllerInput();
-
 		// Quit
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(window, true);
@@ -288,6 +285,8 @@ int main()
 
 		// Check if auto is running before allowing manual drive
 		if(!suspendDrive) {
+			// Process any controller inputs
+			fetchControllerInput();
 			if (USE_TANK) {
 				// Tank
 				chassis.tank(leftTank, rightTank);

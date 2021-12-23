@@ -86,7 +86,7 @@ void tracking() {
         // Get encoder data, directly fron wheels because no tracking wheels yet
         float lEncVal = leftTrackingWheel.read();
         float rEncVal = rightTrackingWheel.read();
-        float bEncVal = 0;
+        float bEncVal = backTrackingWheel.read();
 
         // Calculate delta values
         lDelta = lEncVal - lLast;
@@ -147,13 +147,13 @@ void tracking() {
         trackingData.update(globalPos.getX(), globalPos.getY(), trackingData.getHeading() + aDelta);
 
         // Debug print
-		/*
+		
 		printf("X: %f, Y: %f, A: %f\n", 
 			trackingData.getPos().getX(), 
 			trackingData.getPos().getY(), 
 			-radToDeg(trackingData.getHeading())
 		);
-		*/
+		
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
